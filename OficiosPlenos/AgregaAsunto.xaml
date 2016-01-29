@@ -1,0 +1,197 @@
+﻿<Window x:Class="OficiosPlenos.AgregaAsunto"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+        Title="AgregaAsunto"
+        Width="784.776"
+        Height="650"
+        Loaded="Window_Loaded">
+    <Grid>
+        <Label Margin="30,29,0,0"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               Content="Pleno de Circuito que emite:" />
+        <ComboBox x:Name="CbxPlenos"
+                  Width="367"
+                  Margin="30,60,0,0"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Top"
+                  DisplayMemberPath="OrganismoDesc"
+                  ItemsSource="{Binding}"
+                  SelectedValuePath="IdOrganismo"
+                  SelectionChanged="CbxPlenos_SelectionChanged" />
+        <Label Margin="30,102,0,0"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               Content="Secretario encargado:" />
+        <TextBox x:Name="TxtSecretario"
+                 Width="362"
+                 Height="23"
+                 Margin="35,133,0,0"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Top"
+                 IsEnabled="False"
+                 Text="{Binding Encargado.Completo,
+                                Mode=TwoWay}"
+                 TextWrapping="Wrap" />
+        <GroupBox Width="233"
+                  Height="97"
+                  Margin="35,186,0,0"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Top"
+                  Header="Contradicción de Tesis"
+                  RenderTransformOrigin="0.5,0.5">
+            <Grid>
+                <Label Margin="44,10,0,0"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       Content="Número" />
+                <TextBox x:Name="TxtNumAsunto"
+                         Width="54"
+                         Height="23"
+                         Margin="44,36,0,0"
+                         HorizontalAlignment="Left"
+                         VerticalAlignment="Top"
+                         PreviewTextInput="TxtNumAsunto_PreviewTextInput"
+                         Text="{Binding NumAsunto}"
+                         TextWrapping="Wrap" />
+
+
+                <Label Margin="160,10,0,0"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       Content="Año" />
+                <TextBox x:Name="TxtYear"
+                         Width="54"
+                         Height="23"
+                         Margin="150,36,0,0"
+                         HorizontalAlignment="Left"
+                         VerticalAlignment="Top"
+                         PreviewTextInput="TxtNumAsunto_PreviewTextInput"
+                         Text="{Binding AnioAsunto}"
+                         TextWrapping="Wrap" />
+                <Label Margin="116,29,0,0"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       Content="/"
+                       FontSize="17"
+                       FontWeight="Bold" />
+            </Grid>
+        </GroupBox>
+        <GroupBox Height="228"
+                  Margin="35,309,35,0"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Top"
+                  Header="Acuerdo admisorioLabel">
+            <Grid>
+                <Label Margin="23,10,0,0"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       Content="Oficio de admisión:" />
+                <TextBox x:Name="TxtOficioAd"
+                         Width="215"
+                         Height="23"
+                         Margin="23,41,0,0"
+                         HorizontalAlignment="Left"
+                         VerticalAlignment="Top"
+                         Text="{Binding OficioAdmision,
+                                        Mode=TwoWay}"
+                         TextChanged="TxtOficioAd_TextChanged"
+                         TextWrapping="Wrap" />
+                <Label Margin="23,72,0,0"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       Content="Fecha de recepción del oficio:" />
+
+                <telerik:RadDatePicker x:Name="DtpOficio"
+                                       Width="215"
+                                       Margin="23,103,0,0"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Top"
+                                       IsEnabled="False"
+                                       SelectedValue="{Binding FechaOficioAdmin}" />
+                <Label Margin="23,137,0,0"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       Content="Archivo del oficio:" />
+                <TextBox x:Name="TxtFilePath"
+                         Width="259"
+                         Height="23"
+                         Margin="23,168,0,0"
+                         HorizontalAlignment="Left"
+                         VerticalAlignment="Top"
+                         IsEnabled="False"
+                         Text="{Binding OficioFilePath,
+                                        Mode=TwoWay}"
+                         TextWrapping="Wrap" />
+                <Button x:Name="BtnOficio"
+                        Width="44"
+                        Margin="287,168,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Click="BtnOficio_Click"
+                        Content="..."
+                        IsEnabled="False" />
+
+                <Label Margin="380,40,0,0"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       Content="Correo electrónico"
+                       FontWeight="Bold" />
+                <Label Margin="380,72,0,0"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       Content="Fecha de recepción del correo:" />
+
+                <telerik:RadDatePicker x:Name="DtpCorreo"
+                                       Width="227"
+                                       Margin="380,103,0,0"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Top"
+                                       SelectedValue="{Binding FechaCorreo}"
+                                       SelectionChanged="DtpCorreo_SelectionChanged" />
+                <Label Margin="380,137,0,0"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       Content="Archivo del correo:" />
+                <TextBox x:Name="TxtCorreoFilePath"
+                         Width="250"
+                         Height="23"
+                         Margin="380,168,0,0"
+                         HorizontalAlignment="Left"
+                         VerticalAlignment="Top"
+                         IsEnabled="False"
+                         Text="{Binding CorreoFilePath,
+                                        Mode=TwoWay}"
+                         TextWrapping="Wrap" />
+
+                <Button x:Name="BtnCorreoFile"
+                        Width="44"
+                        Margin="635,168,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Click="BtnCorreoFile_Click"
+                        Content="..."
+                        IsEnabled="False" />
+
+            </Grid>
+        </GroupBox>
+        <Button x:Name="BtnCancelar"
+                Width="75"
+                Margin="667,569,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Click="BtnCancelar_Click"
+                Content="Cancelar" />
+        <Button x:Name="BtnGuardar"
+                Width="75"
+                Margin="587,569,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Click="BtnGuardar_Click"
+                Content="Guardar" />
+
+
+
+    </Grid>
+</Window>
