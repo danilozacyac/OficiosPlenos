@@ -7,12 +7,26 @@ namespace OficiosPlenos.Dto
     {
         private int idEncargado;
         private int idPleno;
+        private int idTitulo;
         private string nombre;
         private string nombreAlpha;
         private string apellido;
         private string apellidoAlpha;
         private string completo;
         private string completoAlpha;
+        
+        public int IdTitulo
+        {
+            get
+            {
+                return this.idTitulo;
+            }
+            set
+            {
+                this.idTitulo = value;
+            }
+        }
+
         public int IdPleno
         {
             get

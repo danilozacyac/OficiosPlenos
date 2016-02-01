@@ -43,6 +43,7 @@ namespace OficiosPlenos
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            CbxTitulo.DataContext = TituloSingleton.Titulos;
             CbxPlenos.DataContext = OrganismoSingleton.Plenos;
             this.DataContext = encargado;
 

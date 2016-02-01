@@ -1,17 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using OficiosPlenos.Dto;
+using OficiosPlenos.Model;
+using Telerik.Windows.Controls;
 
 namespace OficiosPlenos
 {
@@ -20,9 +13,36 @@ namespace OficiosPlenos
     /// </summary>
     public partial class MainWindow : Window
     {
+        ObservableCollection<Contradiccion> listaContradicciones;
+
+
         public MainWindow()
         {
             InitializeComponent();
+            StyleManager.ApplicationTheme = new Windows8Theme();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            
+
+            listaContradicciones = new ContradiccionModel().GetContradiccion();
+
+            GContra.DataContext = listaContradicciones;
+        }
+
+        private void BtnAgregarContra_Click(object sender, RoutedEventArgs e)
+        {
+            AgregaAsunto agrega = new AgregaAsunto();
+            agrega.Owner = this;
+            agrega.ShowDialog();
+        }
+
+        private void AddEncargado_Click(object sender, RoutedEventArgs e)
+        {
+            AgregarEncargado agrega = new AgregarEncargado();
+            agrega.Owner = this;
+            agrega.ShowDialog();
         }
     }
 }

@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Data.OleDb;
 using System.Linq;
 using OficiosPlenos.Dto;
 using ScjnUtilities;
-using System.Configuration;
 
 namespace OficiosPlenos.Model
 {
@@ -65,6 +66,59 @@ namespace OficiosPlenos.Model
             }
 
             return existe;
+        }
+
+
+        public ObservableCollection<Contradiccion> GetContradiccion()
+        {
+            ObservableCollection<Contradiccion> listaContradicciones = new ObservableCollection<Contradiccion>();
+
+            OleDbConnection oleConne = new OleDbConnection(connectionString);
+            OleDbCommand cmd = null;
+            OleDbDataReader reader = null;
+
+            String sqlCadena = "SELECT * FROM Contradicciones ORDER BY AnioAsunto desc,NumAsunto asc";
+
+            try
+            {
+                oleConne.Open();
+
+                cmd = new OleDbCommand(sqlCadena, oleConne);
+                reader = cmd.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        Contradiccion contradiccion = new Contradiccion();
+                        contradiccion.IdEncargado = Convert.ToInt32(reader["IdEncargado"]);
+                        contradiccion.IdPleno = Convert.ToInt32(reader["IdPleno"]);
+                        contradiccion.NumAsunto = Convert.ToInt32(reader["NumAsunto"]);
+                        contradiccion.AnioAsunto = Convert.ToInt32(reader["AnioAsunto"]);
+                        contradiccion.OficioAdmision = reader["OficioAdmision"].ToString();
+
+                        listaContradicciones.Add(contradiccion);
+                    }
+                }
+            }
+            catch (OleDbException ex)
+            {
+                string methodName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+                ErrorUtilities.SetNewErrorMessage(ex, methodName + " Exception,ContradiccionModel", "OficiosPleno");
+            }
+            catch (Exception ex)
+            {
+                string methodName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+                ErrorUtilities.SetNewErrorMessage(ex, methodName + " Exception,ContradiccionModel", "OficiosPleno");
+            }
+            finally
+            {
+                cmd.Dispose();
+                reader.Close();
+                oleConne.Close();
+            }
+
+            return listaContradicciones;
         }
 
 

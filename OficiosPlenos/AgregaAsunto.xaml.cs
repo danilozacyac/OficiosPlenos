@@ -44,7 +44,7 @@ namespace OficiosPlenos
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            CbxPlenos.DataContext = OrganismoSingleton.Plenos;
+            //CbxPlenos.DataContext = OrganismoSingleton.Plenos;
             this.DataContext = contradiccion;
         }
 

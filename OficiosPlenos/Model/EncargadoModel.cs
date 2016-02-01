@@ -133,18 +133,24 @@ namespace OficiosPlenos.Model
 
             bool insertCompleted = false;
 
+            Encargado lastEncargado = this.GetEncargados(encargado.IdPleno);
+
+            if (lastEncargado != null)
+                this.EliminaAsignacion(lastEncargado);
+            
             encargado.IdEncargado = DataBaseUtilities.GetNextIdForUse("EncargadoPleno", "IdEncargado", connection);
 
             try
             {
                 connection.Open();
 
-                string sqlQuery = "INSERT INTO EncargadoPleno(IdEncargado, IdPleno,Nombre,Apellidos,NombreCompleto)" +
-                                  "VALUES (@IdEncargado,@IdPleno,@Nombre,@Apellidos,@NombreCompleto)";
+                string sqlQuery = "INSERT INTO EncargadoPleno(IdEncargado, IdPleno,IdTitulo,Nombre,Apellidos,NombreCompleto)" +
+                                  "VALUES (@IdEncargado,@IdPleno,@IdTitulo,@Nombre,@Apellidos,@NombreCompleto)";
 
                 OleDbCommand cmd = new OleDbCommand(sqlQuery, connection);
                 cmd.Parameters.AddWithValue("@IdEncargado", encargado.IdEncargado);
                 cmd.Parameters.AddWithValue("@IdPleno", encargado.IdPleno);
+                cmd.Parameters.AddWithValue("@IdTitulo", encargado.IdTitulo);
                 cmd.Parameters.AddWithValue("@Nombre", encargado.Nombre);
                 cmd.Parameters.AddWithValue("@Apellidos", encargado.Apellido);
                 cmd.Parameters.AddWithValue("@NombreCompleto", encargado.Nombre + " " + encargado.Apellido);
@@ -170,6 +176,48 @@ namespace OficiosPlenos.Model
             }
 
             return insertCompleted;
+        }
+
+
+
+        public bool EliminaAsignacion(Encargado encargado)
+        {
+            OleDbConnection connection = new OleDbConnection(connectionString);
+
+            bool updateCompleted = false;
+
+            try
+            {
+                connection.Open();
+
+                string sqlQuery = "UPDATE EncargadoPleno SET IdPleno = @IdPleno WHERE IdEncargado = @IdEncargado";
+
+
+                OleDbCommand cmd = new OleDbCommand(sqlQuery, connection);
+                cmd.Parameters.AddWithValue("@IdPleno", 0);
+                cmd.Parameters.AddWithValue("@IdEncargado", encargado.IdEncargado);
+
+                cmd.ExecuteNonQuery();
+
+                cmd.Dispose();
+                updateCompleted = true;
+            }
+            catch (OleDbException ex)
+            {
+                string methodName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+                ErrorUtilities.SetNewErrorMessage(ex, methodName + " Exception,EncargadoModel", "PadronApi");
+            }
+            catch (Exception ex)
+            {
+                string methodName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+                ErrorUtilities.SetNewErrorMessage(ex, methodName + " Exception,EncargadoModel", "PadronApi");
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return updateCompleted;
         }
 
     }
