@@ -9,6 +9,7 @@ namespace OficiosPlenos.Dto
         private int idContradiccion;
         private int idPleno;
         private int idEncargado;
+        private string encargadoStr;
         private int numAsunto = 0;
         private int anioAsunto = DateTime.Now.Year;
         private string oficioAdmision = String.Empty;
@@ -22,10 +23,12 @@ namespace OficiosPlenos.Dto
         private DateTime? fEnvioOfSga;
         private int fEnvioOfSgaInt;
         private string ofEnviadoSgaFilePath;
+        private string oficioRespuestaSga;
         private DateTime? fRespuestaSga;
         private int fRespuestaSgaInt;
         private bool oficioSgaGenerado;
         private bool existeContradiccion;
+        private string ofRespuestaSgaFilePath;
         private string oficioPlenos;
         private DateTime? fEnvioOfPlenos;
         private int fEnvioOfPlenosInt;
@@ -34,6 +37,43 @@ namespace OficiosPlenos.Dto
         private Encargado encargado;
 
         
+
+        public string EncargadoStr
+        {
+            get
+            {
+                return this.encargadoStr;
+            }
+            set
+            {
+                this.encargadoStr = value;
+            }
+        }
+
+        public string OfRespuestaSgaFilePath
+        {
+            get
+            {
+                return this.ofRespuestaSgaFilePath;
+            }
+            set
+            {
+                this.ofRespuestaSgaFilePath = value;
+                this.OnPropertyChanged("OfRespuestaSgaFilePath");
+            }
+        }
+
+        public string OficioRespuestaSga
+        {
+            get
+            {
+                return this.oficioRespuestaSga;
+            }
+            set
+            {
+                this.oficioRespuestaSga = value;
+            }
+        }
 
         public int IdContradiccion
         {

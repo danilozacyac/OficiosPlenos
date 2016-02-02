@@ -5,6 +5,7 @@
         Title="AgregaAsunto"
         Width="784.776"
         Height="650"
+        Icon="Resources/postal.png"
         Loaded="Window_Loaded">
     <Grid>
         <Label Margin="30,29,0,0"

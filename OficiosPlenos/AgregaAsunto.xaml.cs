@@ -1,21 +1,15 @@
-﻿using Microsoft.Win32;
+﻿using System;
+using System.Configuration;
+using System.IO;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using Microsoft.Win32;
 using OficiosPlenos.Dto;
 using OficiosPlenos.Model;
 using OficiosPlenos.Singletons;
 using ScjnUtilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace OficiosPlenos
 {
@@ -28,6 +22,8 @@ namespace OficiosPlenos
         private Contradiccion contradiccion;
         private bool isUpdating = false;
         Organismo selectedOrganismo;
+
+        private string basePath = ConfigurationManager.AppSettings["BasePath"].ToString();
 
         public AgregaAsunto()
         {
@@ -172,14 +168,60 @@ namespace OficiosPlenos
                 }
                 else
                 {
+                    string oficioPath = basePath + "AdO" + DateTimeUtilities.DateToInt(contradiccion.FechaOficioAdmin) + contradiccion.AnioAsunto + StringUtilities.SetCeros(contradiccion.NumAsunto.ToString()) + contradiccion.IdPleno + Path.GetExtension(contradiccion.OfRespuestaSgaFilePath);
+                    string correoPath = basePath + "AdC" + DateTimeUtilities.DateToInt(contradiccion.FechaOficioAdmin) + contradiccion.AnioAsunto + StringUtilities.SetCeros(contradiccion.NumAsunto.ToString()) + contradiccion.IdPleno + Path.GetExtension(contradiccion.OfRespuestaSgaFilePath);
+
+                    if (!String.IsNullOrEmpty(contradiccion.OficioFilePath))
+                    {
+                        if (!CopyToLocalResource(contradiccion.OficioFilePath, oficioPath))
+                        {
+                            MessageBox.Show("No se pudo copiar el archivo, intentelo de nuevo");
+                            return;
+                        }
+                        else
+                        {
+                            contradiccion.OficioFilePath = oficioPath;
+                        }
+                    }
+
+                    if (!String.IsNullOrEmpty(contradiccion.CorreoFilePath))
+                    {
+                        if (!CopyToLocalResource(contradiccion.CorreoFilePath, correoPath))
+                        {
+                            MessageBox.Show("No se pudo copiar el archivo, intentelo de nuevo");
+                            return;
+                        }
+                        else
+                        {
+                            contradiccion.CorreoFilePath = correoPath;
+                        }
+                    }
+
+
                     model.InsertaContradiccion(contradiccion);
                     this.Close();
                 }
             }
         }
 
-       
 
-        
+
+
+        public static bool CopyToLocalResource(string currentPath, string newPath)
+        {
+
+            try
+            {
+                File.Copy(currentPath, newPath, true);
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+
     }
 }

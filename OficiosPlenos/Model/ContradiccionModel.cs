@@ -5,6 +5,7 @@ using System.Data.OleDb;
 using System.Linq;
 using OficiosPlenos.Dto;
 using ScjnUtilities;
+using System.Data;
 
 namespace OficiosPlenos.Model
 {
@@ -27,8 +28,8 @@ namespace OficiosPlenos.Model
             OleDbCommand cmd = null;
             OleDbDataReader reader = null;
 
-            String sqlCadena = "SELECT * FROM Contradicciones "+ 
-                "WHERE IdPleno = @IdPleno AND NumAsunto = @NumAsunto AND AnioAsunto = @AnioAsunto";
+            String sqlCadena = "SELECT * FROM Contradicciones " +
+                               "WHERE IdPleno = @IdPleno AND NumAsunto = @NumAsunto AND AnioAsunto = @AnioAsunto";
 
             try
             {
@@ -68,7 +69,6 @@ namespace OficiosPlenos.Model
             return existe;
         }
 
-
         public ObservableCollection<Contradiccion> GetContradiccion()
         {
             ObservableCollection<Contradiccion> listaContradicciones = new ObservableCollection<Contradiccion>();
@@ -77,7 +77,7 @@ namespace OficiosPlenos.Model
             OleDbCommand cmd = null;
             OleDbDataReader reader = null;
 
-            String sqlCadena = "SELECT * FROM Contradicciones ORDER BY AnioAsunto desc,NumAsunto asc";
+            String sqlCadena = "SELECT C.*,E.NombreCompleto FROM Contradicciones C INNER JOIN EncargadoPleno E ON C.IdEncargado = E.IdEncargado ORDER BY AnioAsunto desc,NumAsunto asc";
 
             try
             {
@@ -91,12 +91,34 @@ namespace OficiosPlenos.Model
                     while (reader.Read())
                     {
                         Contradiccion contradiccion = new Contradiccion();
+                        contradiccion.IdContradiccion = Convert.ToInt32(reader["IdContradiccion"]);
                         contradiccion.IdEncargado = Convert.ToInt32(reader["IdEncargado"]);
+                        contradiccion.EncargadoStr = reader["NombreCompleto"].ToString();
                         contradiccion.IdPleno = Convert.ToInt32(reader["IdPleno"]);
                         contradiccion.NumAsunto = Convert.ToInt32(reader["NumAsunto"]);
                         contradiccion.AnioAsunto = Convert.ToInt32(reader["AnioAsunto"]);
                         contradiccion.OficioAdmision = reader["OficioAdmision"].ToString();
+                        contradiccion.FechaOficioAdmin = DateTimeUtilities.GetDateFromReader(reader, "FechaAdminOficio");
+                        contradiccion.OficioFilePath = reader["RutaArchivoOficio"].ToString();
+                        contradiccion.FechaCorreo = DateTimeUtilities.GetDateFromReader(reader, "FechaAdminCorreo");
+                        contradiccion.CorreoFilePath = reader["RutaArchivoCorreo"].ToString();
+                        contradiccion.OficioSga = reader["OficioSga"].ToString();
+                        contradiccion.FEnvioOfSga = DateTimeUtilities.GetDateFromReader(reader, "FEnvioOfSga");
+                        contradiccion.FEnvioOfSgaInt = Convert.ToInt32(reader["FEnvioOfSgaInt"]);
+                        contradiccion.OfEnviadoSgaFilePath = reader["OfEnviadoSgaFilePath"].ToString();
+                        contradiccion.OficioRespuestaSga = reader["OficioRespuestaSga"].ToString();
+                        contradiccion.FRespuestaSga = DateTimeUtilities.GetDateFromReader(reader, "FRespuestaSga");
+                        contradiccion.FRespuestaSgaInt = Convert.ToInt32(reader["FRespuestaSgaInt"]);
+                        contradiccion.ExisteContradiccion = Convert.ToBoolean(reader["ExisteContradiccion"]);
+                        contradiccion.OfRespuestaSgaFilePath = reader["ArchivoRespuestaSga"].ToString();
 
+
+                        contradiccion.OficioPlenos = reader["OficioPleno"].ToString();
+                        contradiccion.FEnvioOfPlenos = DateTimeUtilities.GetDateFromReader(reader, "FEnvioOfPleno");
+                        contradiccion.FEnvioOfPlenosInt = Convert.ToInt32(reader["FEnvioOfPlenoInt"]);
+                        contradiccion.OficioPlenoGenerado = Convert.ToBoolean(reader["OficioGeneradoPleno"]);
+                        contradiccion.OPlenoFilePath = reader["RutaOficioPleno"].ToString();
+                        
                         listaContradicciones.Add(contradiccion);
                     }
                 }
@@ -120,7 +142,6 @@ namespace OficiosPlenos.Model
 
             return listaContradicciones;
         }
-
 
         public bool InsertaContradiccion(Contradiccion contradiccion)
         {
@@ -147,10 +168,8 @@ namespace OficiosPlenos.Model
 
                 if (contradiccion.FechaOficioAdmin != null)
                 {
-                    
                     cmd.Parameters.AddWithValue("@FechaAdminOficio", contradiccion.FechaOficioAdmin);
                     cmd.Parameters.AddWithValue("@FechaAdminOficioInt", contradiccion.FechaOficioAdminInt);
-                    
                 }
                 else
                 {
@@ -193,6 +212,170 @@ namespace OficiosPlenos.Model
             }
 
             return insertCompleted;
+        }
+
+        public bool UpdateSga(Contradiccion contradiccion)
+        {
+            OleDbConnection connection = new OleDbConnection(connectionString);
+
+            OleDbDataAdapter dataAdapter;
+
+            DataSet dataSet = new DataSet();
+            DataRow dr;
+
+            bool completed = false;
+
+            try
+            {
+                string sqlCadena = "SELECT * FROM Contradicciones WHERE IdContradiccion = @IdContradiccion";
+
+                dataAdapter = new OleDbDataAdapter();
+                dataAdapter.SelectCommand = new OleDbCommand(sqlCadena, connection);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@IdContradiccion", contradiccion.IdContradiccion);
+                dataAdapter.Fill(dataSet, "Contradicciones");
+
+                dr = dataSet.Tables["Contradicciones"].Rows[0];
+                dr.BeginEdit();
+                dr["OficioSga"] = contradiccion.OficioSga;
+                if (contradiccion.FEnvioOfSga != null)
+                {
+                    dr["FEnvioOfSga"] = contradiccion.FEnvioOfSga;
+                    dr["FEnvioOfSgaInt"] = DateTimeUtilities.DateToInt(contradiccion.FEnvioOfSga);
+                }
+                else
+                {
+                    dr["FEnvioOfSga"] = System.DBNull.Value;
+                    dr["FEnvioOfSgaInt"] = 0;
+                }
+                dr["OfEnviadoSgaFilePath"] = contradiccion.OfEnviadoSgaFilePath;
+                dr["OficioRespuestaSga"] = contradiccion.OficioRespuestaSga;
+                if (contradiccion.FRespuestaSga != null)
+                {
+                    dr["FRespuestaSga"] = contradiccion.FRespuestaSga;
+                    dr["FRespuestaSgaInt"] = DateTimeUtilities.DateToInt(contradiccion.FRespuestaSga);
+                }
+                else
+                {
+                    dr["FRespuestaSga"] = System.DBNull.Value;
+                    dr["FRespuestaSgaInt"] = 0;
+                }
+                dr["ExisteContradiccion"] = Convert.ToInt16(contradiccion.ExisteContradiccion);
+                dr["ArchivoRespuestaSga"] = contradiccion.OfRespuestaSgaFilePath;
+                dr["IdContradiccion"] = contradiccion.IdContradiccion;
+
+                dr.EndEdit();
+
+                dataAdapter.UpdateCommand = connection.CreateCommand();
+
+                dataAdapter.UpdateCommand.CommandText = "UPDATE Contradicciones SET OficioSga = @OficioSga,FEnvioOfSga = @FEnvioOfSga, FEnvioOfSgaInt = @FEnvioOfSgaInt, OfEnviadoSgaFilePath = @OfEnviadoSgaFilePath," +
+                                                        "OficioRespuestaSga = @OficioRespuestaSga,FRespuestaSga = @FRespuestaSga,FRespuestaSgaInt = @FRespuestaSgaInt,ExisteContradiccion = @ExisteContradiccion, ArchivoRespuestaSga = @ArchivoRespuestaSga " +
+                                                        " WHERE IdContradiccion = @IdContradiccion";
+
+                dataAdapter.UpdateCommand.Parameters.Add("@OficioSga", OleDbType.VarChar, 0, "OficioSga");
+                dataAdapter.UpdateCommand.Parameters.Add("@FEnvioOfSga", OleDbType.Date, 0, "FEnvioOfSga");
+                dataAdapter.UpdateCommand.Parameters.Add("@FEnvioOfSgaInt", OleDbType.Numeric, 0, "FEnvioOfSgaInt");
+                dataAdapter.UpdateCommand.Parameters.Add("@OfEnviadoSgaFilePath", OleDbType.VarChar, 0, "OfEnviadoSgaFilePath");
+                dataAdapter.UpdateCommand.Parameters.Add("@OficioRespuestaSga", OleDbType.VarChar, 0, "OficioRespuestaSga");
+                dataAdapter.UpdateCommand.Parameters.Add("@FRespuestaSga", OleDbType.Date, 0, "FRespuestaSga");
+                dataAdapter.UpdateCommand.Parameters.Add("@FRespuestaSgaInt", OleDbType.Numeric, 0, "FRespuestaSgaInt");
+                dataAdapter.UpdateCommand.Parameters.Add("@ExisteContradiccion", OleDbType.Numeric, 0, "ExisteContradiccion");
+                dataAdapter.UpdateCommand.Parameters.Add("@ArchivoRespuestaSga", OleDbType.VarChar, 0, "ArchivoRespuestaSga");
+                dataAdapter.UpdateCommand.Parameters.Add("@IdContradiccion", OleDbType.Numeric, 0, "IdContradiccion");
+
+                dataAdapter.Update(dataSet, "Contradicciones");
+                dataSet.Dispose();
+                dataAdapter.Dispose();
+                completed = true;
+            }
+            catch (OleDbException ex)
+            {
+                string methodName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+                ErrorUtilities.SetNewErrorMessage(ex, methodName + " Exception,ContradiccionModel", "OficiosPleno");
+            }
+            catch (Exception ex)
+            {
+                string methodName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+                ErrorUtilities.SetNewErrorMessage(ex, methodName + " Exception,ContradiccionModel", "OficiosPleno");
+            }
+            finally
+            {
+                connection.Close();
+            }
+            return completed;
+        }
+
+        public bool UpdatePlenos(Contradiccion contradiccion)
+        {
+            OleDbConnection connection = new OleDbConnection(connectionString);
+
+            OleDbDataAdapter dataAdapter;
+
+            DataSet dataSet = new DataSet();
+            DataRow dr;
+
+            bool completed = false;
+
+            try
+            {
+                string sqlCadena = "SELECT * FROM Contradicciones WHERE IdContradiccion = @IdContradiccion";
+
+                dataAdapter = new OleDbDataAdapter();
+                dataAdapter.SelectCommand = new OleDbCommand(sqlCadena, connection);
+                dataAdapter.SelectCommand.Parameters.AddWithValue("@IdContradiccion", contradiccion.IdContradiccion);
+                dataAdapter.Fill(dataSet, "Contradicciones");
+
+                dr = dataSet.Tables["Contradicciones"].Rows[0];
+                dr.BeginEdit();
+                dr["OficioPleno"] = contradiccion.OficioPlenos;
+                if (contradiccion.FEnvioOfPlenos != null)
+                {
+                    dr["FEnvioOfPleno"] = contradiccion.FEnvioOfPlenos;
+                    dr["FEnvioOfPlenoInt"] = DateTimeUtilities.DateToInt(contradiccion.FEnvioOfPlenos);
+                }
+                else
+                {
+                    dr["FEnvioOfPleno"] = System.DBNull.Value;
+                    dr["FEnvioOfPlenoInt"] = 0;
+                }
+                dr["OficioGeneradoPleno"] = Convert.ToInt16(contradiccion.OficioPlenoGenerado);
+                dr["RutaOficioPleno"] = contradiccion.OPlenoFilePath;
+                dr["IdContradiccion"] = contradiccion.IdContradiccion;
+                
+                dr.EndEdit();
+
+                dataAdapter.UpdateCommand = connection.CreateCommand();
+
+                dataAdapter.UpdateCommand.CommandText = "UPDATE Contradicciones SET OficioPleno = @OficioPleno,FEnvioOfPleno = @FEnvioOfPleno," +
+                                                        "FEnvioOfPlenoInt = @FEnvioOfPlenoInt, OficioGeneradoPleno = @OficioGeneradoPleno,RutaOficioPleno = @RutaOficioPleno " +
+                                                        " WHERE IdContradiccion = @IdContradiccion";
+
+                dataAdapter.UpdateCommand.Parameters.Add("@OficioPleno", OleDbType.VarChar, 0, "OficioPleno");
+                dataAdapter.UpdateCommand.Parameters.Add("@FEnvioOfPleno", OleDbType.Date, 0, "FEnvioOfPleno");
+                dataAdapter.UpdateCommand.Parameters.Add("@FEnvioOfPlenoInt", OleDbType.Numeric, 0, "FEnvioOfPlenoInt");
+                dataAdapter.UpdateCommand.Parameters.Add("@OficioGeneradoPleno", OleDbType.Numeric, 0, "OficioGeneradoPleno");
+                dataAdapter.UpdateCommand.Parameters.Add("@RutaOficioPleno", OleDbType.VarChar, 0, "RutaOficioPleno");
+                dataAdapter.UpdateCommand.Parameters.Add("@IdContradiccion", OleDbType.Numeric, 0, "IdContradiccion");
+
+                dataAdapter.Update(dataSet, "Contradicciones");
+                dataSet.Dispose();
+                dataAdapter.Dispose();
+                completed = true;
+            }
+            catch (OleDbException ex)
+            {
+                string methodName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+                ErrorUtilities.SetNewErrorMessage(ex, methodName + " Exception,ContradiccionModel", "OficiosPleno");
+            }
+            catch (Exception ex)
+            {
+                string methodName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+                ErrorUtilities.SetNewErrorMessage(ex, methodName + " Exception,ContradiccionModel", "OficiosPleno");
+            }
+            finally
+            {
+                connection.Close();
+            }
+            return completed;
         }
     }
 }

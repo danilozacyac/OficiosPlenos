@@ -4,6 +4,7 @@
         Title="AgregarEncargado"
         Width="362"
         Height="421"
+        Icon="Resources/postal.png"
         Loaded="Window_Loaded"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen">

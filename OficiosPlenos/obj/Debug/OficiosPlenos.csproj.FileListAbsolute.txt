@@ -65,3 +65,8 @@ C:\Users\Luis\Documents\GitHub\OficiosPlenos\OficiosPlenos\obj\Debug\OficiosPlen
 C:\Users\Luis\Documents\GitHub\OficiosPlenos\OficiosPlenos\obj\Debug\OficiosPlenos.csproj.GenerateResource.Cache
 C:\Users\Luis\Documents\GitHub\OficiosPlenos\OficiosPlenos\obj\Debug\GeneratedInternalTypeHelper.g.cs
 C:\Users\Luis\Documents\GitHub\OficiosPlenos\OficiosPlenos\obj\Debug\OficiosPlenos_MarkupCompile.lref
+C:\Users\Luis\Documents\GitHub\OficiosPlenos\OficiosPlenos\obj\Debug\SecGeneral.baml
+C:\Users\Luis\Documents\GitHub\OficiosPlenos\OficiosPlenos\obj\Debug\SecGeneral.g.cs
+C:\Users\Luis\Documents\GitHub\OficiosPlenos\OficiosPlenos\obj\Debug\OficiosPleno.baml
+C:\Users\Luis\Documents\GitHub\OficiosPlenos\OficiosPlenos\obj\Debug\OficiosPleno.g.cs
+C:\Users\Luis\Documents\GitHub\OficiosPlenos\OficiosPlenos\bin\Debug\uicontrols.dll
