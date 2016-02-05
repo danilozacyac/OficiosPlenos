@@ -70,3 +70,6 @@ C:\Users\Luis\Documents\GitHub\OficiosPlenos\OficiosPlenos\obj\Debug\SecGeneral.
 C:\Users\Luis\Documents\GitHub\OficiosPlenos\OficiosPlenos\obj\Debug\OficiosPleno.baml
 C:\Users\Luis\Documents\GitHub\OficiosPlenos\OficiosPlenos\obj\Debug\OficiosPleno.g.cs
 C:\Users\Luis\Documents\GitHub\OficiosPlenos\OficiosPlenos\bin\Debug\uicontrols.dll
+C:\Users\lavega\Documents\GitHub\OficiosPlenos\OficiosPlenos\bin\Debug\OficiosPlenos.exe.config
+C:\Users\lavega\Documents\GitHub\OficiosPlenos\OficiosPlenos\obj\Debug\OficiosPlenos.exe
+C:\Users\lavega\Documents\GitHub\OficiosPlenos\OficiosPlenos\obj\Debug\OficiosPlenos.pdb
