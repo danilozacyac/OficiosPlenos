@@ -8,6 +8,7 @@ using Microsoft.Win32;
 using OficiosPlenos.Dto;
 using OficiosPlenos.Model;
 using ScjnUtilities;
+using OficiosPlenos.OficiosFolder;
 
 namespace OficiosPlenos
 {
@@ -107,6 +108,16 @@ namespace OficiosPlenos
         private void BtnVerRespuesta_Click(object sender, RoutedEventArgs e)
         {
             Process.Start(contradiccion.OfRespuestaSgaFilePath);
+        }
+
+        private void BtnGenerarOficio_Click(object sender, RoutedEventArgs e)
+        {
+            string oficioGenPath = basePath + "SgaE" + DateTimeUtilities.DateToInt(contradiccion.FRespuestaSga) + contradiccion.AnioAsunto + StringUtilities.SetCeros(contradiccion.NumAsunto.ToString()) + contradiccion.IdPleno + Path.GetExtension(contradiccion.OfRespuestaSgaFilePath);
+
+            Oficios oficio = new OficiosModel().GetOficioSga();
+
+            GeneraOficio genera = new GeneraOficio(oficio, oficioGenPath);
+            genera.Sga();
         }
 
     }

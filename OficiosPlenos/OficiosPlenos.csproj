@@ -37,6 +37,9 @@
     <ApplicationIcon>postal.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Office.Interop.Word, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="ScjnUtilities">
       <HintPath>..\..\..\..\Visual Studio 2012\Projects\ScjnUtilities\ScjnUtilities\bin\Debug\ScjnUtilities.dll</HintPath>
     </Reference>
@@ -79,13 +82,16 @@
     <Compile Include="Converter\EncargadoConverter.cs" />
     <Compile Include="Converter\OrganismoConverter.cs" />
     <Compile Include="Dto\Encargado.cs" />
+    <Compile Include="Dto\Oficios.cs" />
     <Compile Include="Dto\Titulo.cs" />
     <Compile Include="Model\ContradiccionModel.cs" />
     <Compile Include="Model\EncargadoModel.cs" />
+    <Compile Include="Model\OficiosModel.cs" />
     <Compile Include="Model\TituloModel.cs" />
     <Compile Include="OficiosPleno.xaml.cs">
       <DependentUpon>OficiosPleno.xaml</DependentUpon>
     </Compile>
+    <Compile Include="OficiosFolder\GeneraOficio.cs" />
     <Compile Include="SecGeneral.xaml.cs">
       <DependentUpon>SecGeneral.xaml</DependentUpon>
     </Compile>
