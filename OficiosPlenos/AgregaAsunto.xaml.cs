@@ -113,7 +113,58 @@ namespace OficiosPlenos
 
             if (isUpdating)
             {
+                if (!String.IsNullOrEmpty(contradiccion.OficioAdmision))
+                {
+                    if (contradiccion.FechaOficioAdmin == null)
+                    {
+                        MessageBox.Show("Ingresa la fecha de recepción del oficio", "Atención", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
 
+                    if (String.IsNullOrEmpty(contradiccion.OficioFilePath))
+                    {
+                        MessageBox.Show("Selecciona la ubicación del oficio recibido", "Atención", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+                }
+
+                if (contradiccion.FechaCorreo != null && String.IsNullOrEmpty(contradiccion.CorreoFilePath))
+                {
+                    MessageBox.Show("Selecciona la ubicación del oficio recibido por correo", "Atención", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                string oficioPath = basePath + "AdO" + DateTimeUtilities.DateToInt(contradiccion.FechaOficioAdmin) + contradiccion.AnioAsunto + StringUtilities.SetCeros(contradiccion.NumAsunto.ToString()) + contradiccion.IdPleno + Path.GetExtension(contradiccion.OfRespuestaSgaFilePath);
+                string correoPath = basePath + "AdC" + DateTimeUtilities.DateToInt(contradiccion.FechaOficioAdmin) + contradiccion.AnioAsunto + StringUtilities.SetCeros(contradiccion.NumAsunto.ToString()) + contradiccion.IdPleno + Path.GetExtension(contradiccion.OfRespuestaSgaFilePath);
+
+                if (!String.IsNullOrEmpty(contradiccion.OficioFilePath))
+                {
+                    if (!CopyToLocalResource(contradiccion.OficioFilePath, oficioPath))
+                    {
+                        MessageBox.Show("No se pudo copiar el archivo, intentelo de nuevo");
+                        return;
+                    }
+                    else
+                    {
+                        contradiccion.OficioFilePath = oficioPath;
+                    }
+                }
+
+                if (!String.IsNullOrEmpty(contradiccion.CorreoFilePath))
+                {
+                    if (!CopyToLocalResource(contradiccion.CorreoFilePath, correoPath))
+                    {
+                        MessageBox.Show("No se pudo copiar el archivo, intentelo de nuevo");
+                        return;
+                    }
+                    else
+                    {
+                        contradiccion.CorreoFilePath = correoPath;
+                    }
+                }
+
+                ContradiccionModel model = new ContradiccionModel();
+                model.UpdateContradiccion(contradiccion);
             }
             else
             {

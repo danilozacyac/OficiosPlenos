@@ -1,19 +1,9 @@
-﻿using OficiosPlenos.Dto;
+﻿using System;
+using System.Linq;
+using System.Windows;
+using OficiosPlenos.Dto;
 using OficiosPlenos.Model;
 using OficiosPlenos.Singletons;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace OficiosPlenos
 {
@@ -58,6 +48,13 @@ namespace OficiosPlenos
 
         private void BtnGuardar_Click(object sender, RoutedEventArgs e)
         {
+
+            if (CbxTitulo.SelectedIndex == -1)
+            {
+                MessageBox.Show("Debes de seleccionar título del funcionario ");
+                return;
+            }
+
             if (CbxPlenos.SelectedIndex == -1)
             {
                 MessageBox.Show("Debes de seleccionar el Pleno de Circuito del cual será encargado a partir de este momento");
