@@ -118,6 +118,8 @@ namespace OficiosPlenos.Model
                         contradiccion.FEnvioOfPlenosInt = Convert.ToInt32(reader["FEnvioOfPlenoInt"]);
                         contradiccion.OficioPlenoGenerado = Convert.ToBoolean(reader["OficioGeneradoPleno"]);
                         contradiccion.OPlenoFilePath = reader["RutaOficioPleno"].ToString();
+
+                        contradiccion.Tema = reader["Tema"].ToString();
                         
                         listaContradicciones.Add(contradiccion);
                     }
@@ -155,8 +157,8 @@ namespace OficiosPlenos.Model
             {
                 connection.Open();
 
-                string sqlQuery = "INSERT INTO Contradicciones(IdContradiccion,IdPleno,IdEncargado,NumAsunto,AnioAsunto,OficioAdmision,FechaAdminOficio,FechaAdminOficioInt,RutaArchivoOficio,FechaAdminCorreo,FechaAdminCorreoInt,RutaArchivoCorreo)" +
-                                  "VALUES (@IdContradiccion,@IdPleno,@IdEncargado,@NumAsunto,@AnioAsunto,@OficioAdmision,@FechaAdminOficio,@FechaAdminOficioInt,@RutaArchivoOficio,@FechaAdminCorreo,@FechaAdminCorreoInt,@RutaArchivoCorreo)";
+                string sqlQuery = "INSERT INTO Contradicciones(IdContradiccion,IdPleno,IdEncargado,NumAsunto,AnioAsunto,OficioAdmision,FechaAdminOficio,FechaAdminOficioInt,RutaArchivoOficio,FechaAdminCorreo,FechaAdminCorreoInt,RutaArchivoCorreo,Tema)" +
+                                  "VALUES (@IdContradiccion,@IdPleno,@IdEncargado,@NumAsunto,@AnioAsunto,@OficioAdmision,@FechaAdminOficio,@FechaAdminOficioInt,@RutaArchivoOficio,@FechaAdminCorreo,@FechaAdminCorreoInt,@RutaArchivoCorreo,@Tema)";
 
                 OleDbCommand cmd = new OleDbCommand(sqlQuery, connection);
                 cmd.Parameters.AddWithValue("@IdContradiccion", contradiccion.IdContradiccion);
@@ -190,6 +192,7 @@ namespace OficiosPlenos.Model
                 }
 
                 cmd.Parameters.AddWithValue("@RutaArchivoCorreo", contradiccion.CorreoFilePath);
+                cmd.Parameters.AddWithValue("@Tema", contradiccion.Tema);
 
                 cmd.ExecuteNonQuery();
                 cmd.Dispose();

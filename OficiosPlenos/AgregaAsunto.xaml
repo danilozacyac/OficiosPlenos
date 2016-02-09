@@ -191,6 +191,19 @@
                 VerticalAlignment="Top"
                 Click="BtnGuardar_Click"
                 Content="Guardar" />
+        <Label Margin="395,182,0,0"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               Content="Tema:" />
+        <TextBox x:Name="TxtTema"
+                 Width="347"
+                 Height="96"
+                 Margin="395,208,0,0"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Top"
+                 Text="{Binding Tema,
+                                Mode=TwoWay}"
+                 TextWrapping="Wrap" />
 
 
 

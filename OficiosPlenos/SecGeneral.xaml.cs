@@ -112,12 +112,15 @@ namespace OficiosPlenos
 
         private void BtnGenerarOficio_Click(object sender, RoutedEventArgs e)
         {
-            string oficioGenPath = basePath + "SgaE" + DateTimeUtilities.DateToInt(contradiccion.FRespuestaSga) + contradiccion.AnioAsunto + StringUtilities.SetCeros(contradiccion.NumAsunto.ToString()) + contradiccion.IdPleno + Path.GetExtension(contradiccion.OfRespuestaSgaFilePath);
+            string oficioGenPath = "SgaE" + DateTimeUtilities.DateToInt(contradiccion.FRespuestaSga) + contradiccion.AnioAsunto + StringUtilities.SetCeros(contradiccion.NumAsunto.ToString()) + contradiccion.IdPleno + Path.GetExtension(contradiccion.OfRespuestaSgaFilePath);
 
             Oficios oficio = new OficiosModel().GetOficioSga();
+            
 
-            GeneraOficio genera = new GeneraOficio(oficio, oficioGenPath);
-            genera.Sga();
+
+
+            GeneraOficio genera = new GeneraOficio(oficio,contradiccion, oficioGenPath);
+            genera.GetOficioSga();
         }
 
     }

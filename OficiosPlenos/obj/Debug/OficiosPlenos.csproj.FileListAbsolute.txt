@@ -112,3 +112,17 @@ C:\Users\lavega\Documents\GitHub\OficiosPlenos\OficiosPlenos\obj\Debug\MainWindo
 C:\Users\lavega\Documents\GitHub\OficiosPlenos\OficiosPlenos\obj\Debug\OficiosPlenos.g.resources
 C:\Users\lavega\Documents\GitHub\OficiosPlenos\OficiosPlenos\obj\Debug\OficiosPlenos.Properties.Resources.resources
 C:\Users\lavega\Documents\GitHub\OficiosPlenos\OficiosPlenos\obj\Debug\OficiosPlenos.csproj.GenerateResource.Cache
+C:\Users\lavega\Documents\Visual Studio 2013\Projects\OficiosPlenos\OficiosPlenos\bin\Debug\telerik.windows.controls.gridview.dll
+C:\Users\lavega\Documents\Visual Studio 2013\Projects\OficiosPlenos\OficiosPlenos\bin\Debug\Telerik.Windows.Controls.Navigation.dll
+C:\Users\lavega\Documents\Visual Studio 2013\Projects\OficiosPlenos\OficiosPlenos\bin\Debug\telerik.windows.controls.ribbonview.dll
+C:\Users\lavega\Documents\Visual Studio 2013\Projects\OficiosPlenos\OficiosPlenos\bin\Debug\Telerik.Windows.Data.dll
+C:\Users\lavega\Documents\Visual Studio 2013\Projects\OficiosPlenos\OficiosPlenos\bin\Debug\telerik.windows.controls.gridview.xml
+C:\Users\lavega\Documents\Visual Studio 2013\Projects\OficiosPlenos\OficiosPlenos\bin\Debug\Telerik.Windows.Controls.Navigation.xml
+C:\Users\lavega\Documents\Visual Studio 2013\Projects\OficiosPlenos\OficiosPlenos\bin\Debug\telerik.windows.controls.ribbonview.xml
+C:\Users\lavega\Documents\Visual Studio 2013\Projects\OficiosPlenos\OficiosPlenos\bin\Debug\Telerik.Windows.Data.xml
+C:\Users\lavega\Documents\Visual Studio 2013\Projects\OficiosPlenos\OficiosPlenos\obj\Debug\OficiosPleno.baml
+C:\Users\lavega\Documents\Visual Studio 2013\Projects\OficiosPlenos\OficiosPlenos\obj\Debug\SecGeneral.baml
+C:\Users\lavega\Documents\Visual Studio 2013\Projects\OficiosPlenos\OficiosPlenos\obj\Debug\OficiosPleno.g.cs
+C:\Users\lavega\Documents\Visual Studio 2013\Projects\OficiosPlenos\OficiosPlenos\obj\Debug\SecGeneral.g.cs
+C:\Users\lavega\Documents\Visual Studio 2013\Projects\OficiosPlenos\OficiosPlenos\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\lavega\Documents\Visual Studio 2013\Projects\OficiosPlenos\OficiosPlenos\obj\Debug\OficiosPlenos_MarkupCompile.lref

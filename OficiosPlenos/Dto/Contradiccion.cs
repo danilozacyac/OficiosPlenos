@@ -22,7 +22,7 @@ namespace OficiosPlenos.Dto
         private string oficioSga;
         private DateTime? fEnvioOfSga;
         private int fEnvioOfSgaInt;
-        private string ofEnviadoSgaFilePath;
+        private string ofEnviadoSgaFilePath; 
         private string oficioRespuestaSga;
         private DateTime? fRespuestaSga;
         private int fRespuestaSgaInt;
@@ -35,8 +35,21 @@ namespace OficiosPlenos.Dto
         private bool oficioPlenoGenerado;
         private string oPlenoFilePath;
         private Encargado encargado;
+        private string tema;
 
         
+
+        public string Tema
+        {
+            get
+            {
+                return this.tema;
+            }
+            set
+            {
+                this.tema = value;
+            }
+        }
 
         public string EncargadoStr
         {

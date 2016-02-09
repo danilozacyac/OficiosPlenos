@@ -8,6 +8,7 @@ using OficiosPlenos.Dto;
 using System.IO;
 using System.Reflection;
 using Word = Microsoft.Office.Interop.Word;
+using OficiosPlenos.Singletons;
 
 namespace OficiosPlenos.OficiosFolder
 {
@@ -21,126 +22,29 @@ namespace OficiosPlenos.OficiosFolder
         //object oEndOfDoc = "\\endofdoc";
 
         private readonly Oficios oficio;
+        private readonly Contradiccion contradiccion;
         private readonly string newFileName;
 
-        public GeneraOficio(Oficios oficio, string newFileName)
+        public GeneraOficio(Oficios oficio, Contradiccion contradiccion, string newFileName)
         {
             this.oficio = oficio;
             this.newFileName = newFileName;
+            this.contradiccion = contradiccion;
         }
 
-        //public void InformeGenerlaObras()
-        //{
-        //    oWord = new Microsoft.Office.Interop.Word.Application();
-        //    oDoc = oWord.Documents.Add(ref oMissing, ref oMissing, ref oMissing, ref oMissing);
-        //    oDoc.PageSetup.Orientation = WdOrientation.wdOrientLandscape;
 
-        //    try
-        //    {
-        //        //Insert a paragraph at the beginning of the document.
-        //        Microsoft.Office.Interop.Word.Paragraph oPara1;
-        //        oPara1 = oDoc.Content.Paragraphs.Add(ref oMissing);
-        //        //oPara1.Range.ParagraphFormat.Space1;
-        //        oPara1.Range.Text = "SUPREMA CORTE DE JUSTICIA DE LA NACIÓN";
-
-        //        oPara1.Range.ParagraphFormat.Alignment = Microsoft.Office.Interop.Word.WdParagraphAlignment.wdAlignParagraphCenter;
-        //        oPara1.Range.Font.Bold = 1;
-        //        oPara1.Range.Font.Size = 10;
-        //        oPara1.Range.Font.Name = "Arial";
-        //        oPara1.Format.SpaceAfter = 0;    //24 pt spacing after paragraph.
-        //        oPara1.Range.InsertParagraphAfter();
-        //        oPara1.Range.InsertParagraphAfter();
-        //        oPara1.Range.Text = "COORDINACIÓN DE COMPILACIÓN Y ";
-        //        oPara1.Range.InsertParagraphAfter();
-        //        oPara1.Range.Text = "SISTEMATIZACIÓN DE TESIS";
-        //        oPara1.Range.InsertParagraphAfter();
-        //        oPara1.Range.InsertParagraphAfter();
-        //        oPara1.Range.Text = "RELACIÓN DE TESIS PARA PUBLICAR EN EL SEMANARIO JUDICIAL DE LA FEDERACIÓN Y EN SU GACETA";
-        //        oPara1.Range.InsertParagraphAfter();
-        //        oPara1.Range.InsertParagraphAfter();
-        //        oPara1.Range.Text = "TOTAL:   " + obrasImprimir.Count() + " Obras";
-        //        oPara1.Range.InsertParagraphAfter();
-        //        oPara1.Range.InsertParagraphAfter();
-
-        //        fila = 1;
-        //        Range wrdRng = oDoc.Bookmarks.get_Item(ref oEndOfDoc).Range;
-
-        //        Table oTable = oDoc.Tables.Add(wrdRng, obrasImprimir.Count + 1, 5, ref oMissing, ref oMissing);
-        //        //oTable.Rows[1].HeadingFormat = 1;
-        //        oTable.Range.ParagraphFormat.SpaceAfter = 6;
-        //        oTable.Range.ParagraphFormat.Alignment = Microsoft.Office.Interop.Word.WdParagraphAlignment.wdAlignParagraphCenter;
-        //        oTable.Range.Font.Size = 9;
-        //        oTable.Range.Font.Name = "Arial";
-        //        oTable.Range.Font.Bold = 0;
-        //        oTable.Borders.Enable = 1;
-
-        //        oTable.Columns[1].SetWidth(60, WdRulerStyle.wdAdjustSameWidth);
-        //        oTable.Columns[2].SetWidth(400, WdRulerStyle.wdAdjustSameWidth);
-        //        oTable.Columns[3].SetWidth(80, WdRulerStyle.wdAdjustSameWidth);
-        //        oTable.Columns[4].SetWidth(60, WdRulerStyle.wdAdjustSameWidth);
-        //        oTable.Columns[5].SetWidth(60, WdRulerStyle.wdAdjustSameWidth);
-
-        //        oTable.Cell(fila, 1).Range.Text = "#";
-        //        oTable.Cell(fila, 2).Range.Text = "Título";
-        //        oTable.Cell(fila, 3).Range.Text = "Núm. de Material";
-        //        oTable.Cell(fila, 4).Range.Text = "Año";
-        //        oTable.Cell(fila, 5).Range.Text = "Tiraje";
-
-        //        oTable.Cell(fila, 1).Range.Font.Bold = 1;
-        //        oTable.Cell(fila, 2).Range.Font.Bold = 1;
-        //        oTable.Cell(fila, 3).Range.Font.Bold = 1;
-        //        oTable.Cell(fila, 4).Range.Font.Bold = 1;
-        //        oTable.Cell(fila, 5).Range.Font.Bold = 1;
-
-        //        fila++;
-        //        int consecutivo = 1;
-
-        //        foreach (Obra print in obrasImprimir)
-        //        {
-        //            oTable.Cell(fila, 1).Range.Text = consecutivo.ToString();
-        //            oTable.Cell(fila, 2).Range.Text = print.Titulo;
-        //            oTable.Cell(fila, 2).Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphJustify;
-        //            oTable.Cell(fila, 3).Range.Text = print.NumMaterial;
-        //            oTable.Cell(fila, 4).Range.Text = print.AnioPublicacion.ToString();
-        //            oTable.Cell(fila, 5).Range.Text = print.Tiraje.ToString();
-        //            // oTable.Cell(fila, 3).Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphJustify;
-
-        //            fila++;
-        //            consecutivo++;
-        //        }
-
-        //        foreach (Section wordSection in oDoc.Sections)
-        //        {
-        //            object pagealign = WdPageNumberAlignment.wdAlignPageNumberRight;
-        //            object firstpage = true;
-        //            wordSection.Footers[WdHeaderFooterIndex.wdHeaderFooterPrimary].PageNumbers.Add(ref pagealign, ref firstpage);
-        //        }
-
-        //        oWord.ActiveDocument.SaveAs(filePath);
-        //        oWord.ActiveDocument.Saved = true;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        string methodName = System.Reflection.MethodBase.GetCurrentMethod().Name;
-        //        ErrorUtilities.SetNewErrorMessage(ex, methodName + " Exception,WordReports", "PadronApi");
-        //    }
-        //    finally
-        //    {
-        //        oWord.Visible = true;
-        //        //oDoc.Close();
-
-        //    }
-        //}
-
-        public void Sga()
+        public void GetOficioSga()
         {
-            string rutaBase = @"C:\Users\" + Environment.UserName + @"\";
+            string rutaBase = @"C:\Users\" + Environment.UserName + @"\Documents\Seguimiento\";
+
+            string machote = rutaBase + "Machote.docx";
+            string nuevoDoc = rutaBase + newFileName;
 
             try
             {
                 //  Just to kill WINWORD.EXE if it is running
                 //  copy letter format to temp.doc
-                File.Copy(rutaBase + "Machote.docx", rutaBase + newFileName, true);   
+                File.Copy(machote, nuevoDoc, true);   
                 //  create missing object
                 object missing = Missing.Value;
                 //  create Word application object
@@ -148,7 +52,7 @@ namespace OficiosPlenos.OficiosFolder
                 //  create Word document object
                 Word.Document aDoc = null;
                 //  create & define filename object with temp.doc
-                object filename = "c:\\temp.doc";
+                object filename = nuevoDoc;
                 //  if temp.doc available
                 if (File.Exists((string)filename))  
                 {
@@ -164,25 +68,82 @@ namespace OficiosPlenos.OficiosFolder
                         ref missing, ref missing);
                     aDoc.Activate();
 
+
                     Microsoft.Office.Interop.Word.Paragraph oPara1;
                     oPara1 = aDoc.Content.Paragraphs.Add(ref oMissing);
                     //oPara1.Range.ParagraphFormat.Space1;
-                    oPara1.Range.Text = "OFICIO";
+                    oPara1.Range.Text = "OFICIO " + contradiccion.OficioAdmision;
                     oPara1.Range.ParagraphFormat.Alignment = Microsoft.Office.Interop.Word.WdParagraphAlignment.wdAlignParagraphRight;
-                    oPara1.Range.Font.Bold = 0;
                     oPara1.Range.Font.Size = 12;
                     oPara1.Range.Font.Name = "Arial";
                     oPara1.Format.SpaceAfter = 0;    //24 pt spacing after paragraph.
-                    oPara1.Range.Text = "FECHA ";
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.Text = "Ciudad de México, " + DateTimeUtilities.ToLongDateFormat(contradiccion.FEnvioOfSga);
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
+                    oPara1.Range.Text = oficio.Parrafo1;
+                    
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.Text = "Distinguido Licenciado Rafael Coello Cetina";
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphJustify;
+                    oPara1.Range.Text = oficio.Parrafo2;
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.ParagraphFormat.FirstLineIndent = 40;
+                    oPara1.Range.Text = oficio.Parrafo3;
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.Text = oficio.Parrafo4;
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.Text = oficio.Parrafo5;
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
+                    oPara1.Range.ParagraphFormat.FirstLineIndent = 0;
+                    oPara1.Range.Text = oficio.Firma;
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphJustify;
+                    oPara1.Range.Font.Size = 10;
+                    oPara1.Range.Text = "C.c.p. " + contradiccion.EncargadoStr + ".- Secretario de Acuerdos del " +
+                        "<Pleno>.- Para su conocimiento y en seguimiento a su oficio " + contradiccion.OficioAdmision +
+                        ", recibido el " + DateTimeUtilities.ToLongDateFormat(contradiccion.FechaOficioAdmin)
+                        + " del año en curso (contradicción de tesis " + contradiccion.NumAsunto + "/" + contradiccion.AnioAsunto + ").";
+                    oPara1.Range.InsertParagraphAfter();
                     oPara1.Range.InsertParagraphAfter();
 
-                    //  Call FindAndReplace()function for each change
-                    //    this.FindAndReplace(wordApp, "<Date>", dtpDate.Text);
-                    //    this.FindAndReplace(wordApp, "<Name>", txName.Text.Trim());
-                    //    this.FindAndReplace(wordApp, "<Subject>", 
-                    //txtSubject.Text.Trim());
-                    //  save temp.doc after modified
+                    FindAndReplace(wordApp, "<Tema>", contradiccion.Tema);
+                    FindAndReplace(wordApp, "<Pleno>", (from n in OrganismoSingleton.Plenos
+                                                        where n.IdOrganismo == contradiccion.IdPleno
+                                                        select n.OrganismoDesc).ToList()[0]);
+                    FindAndReplace(wordApp, "<NumAsunto>", contradiccion.NumAsunto + "/" + contradiccion.AnioAsunto);
+
+                    if (contradiccion.FechaOficioAdmin == contradiccion.FEnvioOfSga)
+                        FindAndReplace(wordApp, "<InicioTermino>", "dia de hoy");
+                    else
+                        FindAndReplace(wordApp, "<InicioTermino>", DateTimeUtilities.ToLongDateFormat(contradiccion.FechaOficioAdmin).Replace("de 2016", "").ToLower() + "del año en curso");
+
                     aDoc.Save();
+                    
+                    aDoc.Close();
+
+                    wordApp.Documents.Close();
+                    wordApp = null;
                 }
                 //    else
                 //        MessageBox.Show("File does not exist.", 
@@ -201,7 +162,7 @@ namespace OficiosPlenos.OficiosFolder
             object findText, object replaceText)
         { 
             object matchCase = true;
-            object matchWholeWord = true;
+            object matchWholeWord = false;
             object matchWildCards = false;
             object matchSoundsLike = false;
             object matchAllWordForms = false;
@@ -223,21 +184,7 @@ namespace OficiosPlenos.OficiosFolder
                 ref matchAlefHamza, ref matchControl);
         }
 
-        private WdColorIndex GetCellColor(int idColor)
-        {
-            if (idColor == 2)
-                return WdColorIndex.wdRed;
-            else if (idColor == 3)
-                return WdColorIndex.wdBlue;
-            else if (idColor == 4)
-                return WdColorIndex.wdViolet;
-            else if (idColor == 5)
-                return WdColorIndex.wdDarkRed;
-            else if (idColor == 6)
-                return WdColorIndex.wdGreen;
-            else
-                return WdColorIndex.wdBlack;
-        }
+     
     }
 }
 

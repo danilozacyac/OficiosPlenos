@@ -10,7 +10,7 @@ namespace OficiosPlenos.Model
     public class OficiosModel
     {
 
-        private readonly string connectionString = ConfigurationManager.ConnectionStrings["Directorio"].ToString();
+        private readonly string connectionString = ConfigurationManager.ConnectionStrings["Contra"].ToString();
 
 
         public Oficios GetOficioSga()

@@ -8,6 +8,12 @@ namespace OficiosPlenos.Dto
 {
     public class Oficios
     {
+
+        private string encargado;
+        private DateTime? fechaOficio;
+        private string asunto;
+        private string tema;
+
         private string parrafo1;
         private string parrafo2;
         private string parrafo3;
@@ -15,6 +21,54 @@ namespace OficiosPlenos.Dto
         private string parrafo5;
         private string parrafo6;
         private string firma;
+
+        public string Encargado
+        {
+            get
+            {
+                return this.encargado;
+            }
+            set
+            {
+                this.encargado = value;
+            }
+        }
+
+        public DateTime? FechaOficio
+        {
+            get
+            {
+                return this.fechaOficio;
+            }
+            set
+            {
+                this.fechaOficio = value;
+            }
+        }
+
+        public string Asunto
+        {
+            get
+            {
+                return this.asunto;
+            }
+            set
+            {
+                this.asunto = value;
+            }
+        }
+
+        public string Tema
+        {
+            get
+            {
+                return this.tema;
+            }
+            set
+            {
+                this.tema = value;
+            }
+        }
 
         public string Firma
         {
