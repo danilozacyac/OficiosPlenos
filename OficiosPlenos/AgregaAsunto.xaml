@@ -6,7 +6,9 @@
         Width="784.776"
         Height="650"
         Icon="Resources/postal.png"
-        Loaded="Window_Loaded">
+        Loaded="Window_Loaded"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen">
     <Grid>
         <Label Margin="30,29,0,0"
                HorizontalAlignment="Left"

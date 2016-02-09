@@ -1,18 +1,11 @@
-﻿using OficiosPlenos.Dto;
-using OficiosPlenos.Model;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using OficiosPlenos.Dto;
+using OficiosPlenos.Model;
+using OficiosPlenos.OficiosFolder;
+using ScjnUtilities;
 
 namespace OficiosPlenos
 {
@@ -55,6 +48,28 @@ namespace OficiosPlenos
             model.UpdatePlenos(contradiccion);
 
             this.Close();
+        }
+
+        private void BtnGenerarOficio_Click(object sender, RoutedEventArgs e)
+        {
+            Oficios oficio = new OficiosModel().GetOficioNoContradiccion();
+            string oficioGenPath = "SgaE" + DateTimeUtilities.DateToInt(contradiccion.FEnvioOfPlenos) + contradiccion.AnioAsunto + StringUtilities.SetCeros(contradiccion.NumAsunto.ToString()) + contradiccion.IdPleno + ".docx";
+            GeneraOficio genera = new GeneraOficio(oficio,contradiccion, oficioGenPath);
+
+            if (contradiccion.ExisteContradiccion)
+                contradiccion.OficioPlenoGenerado = genera.GetOficioContradiccion();
+            else
+                contradiccion.OficioPlenoGenerado = genera.GetOficioNoContradiccion();
+
+            if (contradiccion.OficioPlenoGenerado)
+                BtnGenerarOficio.Visibility = Visibility.Collapsed;
+            else
+                MessageBox.Show("No se pudo generar correctamente el oficio");
+        }
+
+        private void BtnVeroficio_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(contradiccion.OficioPlenos);
         }
     }
 }

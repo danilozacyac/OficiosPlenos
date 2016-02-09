@@ -44,12 +44,20 @@
                                        HorizontalAlignment="Left"
                                        VerticalAlignment="Top"
                                        SelectedValue="{Binding FEnvioOfSga}" />
+                <Button x:Name="BtnVerOficio"
+                        Width="146"
+                        Margin="10,159,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Click="BtnVerOficio_Click"
+                        Content="Ver oficio enviado" />
                 <Button x:Name="BtnGenerarOficio"
                         Width="146"
                         Margin="10,159,0,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
-                        Content="Generar Oficio" Click="BtnGenerarOficio_Click" />
+                        Click="BtnGenerarOficio_Click"
+                        Content="Generar Oficio" />
 
             </Grid>
         </GroupBox>
@@ -97,8 +105,7 @@
                          VerticalAlignment="Top"
                          IsEnabled="False"
                          Text="{Binding OfRespuestaSgaFilePath,
-                                        Mode=TwoWay}"
-                         TextWrapping="Wrap" />
+                                        Mode=TwoWay}" />
                 <Button x:Name="BtnFileRespuesta"
                         Width="25"
                         Margin="169,206,0,0"

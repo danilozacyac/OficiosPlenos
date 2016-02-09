@@ -32,6 +32,11 @@ namespace OficiosPlenos
 
             if (String.IsNullOrEmpty(contradiccion.OfRespuestaSgaFilePath))
                 BtnVerRespuesta.IsEnabled = false;
+
+            BtnGenerarOficio.Visibility = (contradiccion.OficioSgaGenerado) ? Visibility.Collapsed : Visibility.Visible;
+
+            if (!String.IsNullOrEmpty(contradiccion.OficioRespuestaSga))
+                BtnVerRespuesta.IsEnabled = true;
         }
 
         private void BtnCancelar_Click(object sender, RoutedEventArgs e)
@@ -112,15 +117,26 @@ namespace OficiosPlenos
 
         private void BtnGenerarOficio_Click(object sender, RoutedEventArgs e)
         {
-            string oficioGenPath = "SgaE" + DateTimeUtilities.DateToInt(contradiccion.FRespuestaSga) + contradiccion.AnioAsunto + StringUtilities.SetCeros(contradiccion.NumAsunto.ToString()) + contradiccion.IdPleno + Path.GetExtension(contradiccion.OfRespuestaSgaFilePath);
+            string oficioGenPath = "SgaE" + DateTimeUtilities.DateToInt(contradiccion.FEnvioOfSga) + contradiccion.AnioAsunto + StringUtilities.SetCeros(contradiccion.NumAsunto.ToString()) + contradiccion.IdPleno + ".docx";
 
             Oficios oficio = new OficiosModel().GetOficioSga();
             
-
-
-
             GeneraOficio genera = new GeneraOficio(oficio,contradiccion, oficioGenPath);
-            genera.GetOficioSga();
+            contradiccion.OficioSgaGenerado = genera.GetOficioSga();
+
+            if (contradiccion.OficioSgaGenerado)
+                BtnGenerarOficio.Visibility = Visibility.Collapsed;
+            else
+            {
+                MessageBox.Show("No se pudo completar la operación");
+                return;
+            }
+
+        }
+
+        private void BtnVerOficio_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(contradiccion.OfEnviadoSgaFilePath);
         }
 
     }

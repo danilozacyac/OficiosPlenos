@@ -35,18 +35,20 @@
                                HorizontalAlignment="Left"
                                VerticalAlignment="Top"
                                SelectedValue="{Binding FEnvioOfPlenos}" />
-        <Button x:Name="BtnGenerarOficio"
-                Width="146"
-                Margin="48,154,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Content="Generar Oficio" />
         <Button x:Name="BtnVeroficio"
                 Width="146"
                 Margin="48,154,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
-                Content="Ver Oficio" />
+                Content="Ver Oficio" Click="BtnVeroficio_Click" />
+        <Button x:Name="BtnGenerarOficio"
+                Width="146"
+                Margin="48,154,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Click="BtnGenerarOficio_Click"
+                Content="Generar Oficio" />
+
         <Button x:Name="BtnCancelar"
                 Width="75"
                 Margin="119,204,0,0"

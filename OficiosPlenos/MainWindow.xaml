@@ -80,7 +80,7 @@
                              ShowGroupPanel="False">
             <telerik:RadGridView.Columns>
                 <telerik:GridViewDataColumn Width="*"
-                                            DataMemberBinding="{Binding IdPleno}"
+                                            DataMemberBinding="{Binding PlenoStr}"
                                             Header="Pleno"
                                             IsFilterable="False" />
                 <telerik:GridViewDataColumn Width="*"

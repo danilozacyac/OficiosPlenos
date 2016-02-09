@@ -6,6 +6,7 @@ using System.Linq;
 using OficiosPlenos.Dto;
 using ScjnUtilities;
 using System.Data;
+using OficiosPlenos.Singletons;
 
 namespace OficiosPlenos.Model
 {
@@ -77,7 +78,9 @@ namespace OficiosPlenos.Model
             OleDbCommand cmd = null;
             OleDbDataReader reader = null;
 
-            String sqlCadena = "SELECT C.*,E.NombreCompleto FROM Contradicciones C INNER JOIN EncargadoPleno E ON C.IdEncargado = E.IdEncargado ORDER BY AnioAsunto desc,NumAsunto asc";
+            String sqlCadena = "SELECT C.*, E.NombreCompleto, T.Abreviatura FROM (Contradicciones AS C INNER JOIN EncargadoPleno AS E " + 
+                " ON C.IdEncargado = E.IdEncargado) INNER JOIN C_Titulo T ON E.IdTitulo = T.IdTitulo " +
+                " ORDER BY C.AnioAsunto DESC , C.NumAsunto";
 
             try
             {
@@ -94,6 +97,7 @@ namespace OficiosPlenos.Model
                         contradiccion.IdContradiccion = Convert.ToInt32(reader["IdContradiccion"]);
                         contradiccion.IdEncargado = Convert.ToInt32(reader["IdEncargado"]);
                         contradiccion.EncargadoStr = reader["NombreCompleto"].ToString();
+                        contradiccion.Titulo = reader["Abreviatura"].ToString();
                         contradiccion.IdPleno = Convert.ToInt32(reader["IdPleno"]);
                         contradiccion.NumAsunto = Convert.ToInt32(reader["NumAsunto"]);
                         contradiccion.AnioAsunto = Convert.ToInt32(reader["AnioAsunto"]);
@@ -111,13 +115,18 @@ namespace OficiosPlenos.Model
                         contradiccion.FRespuestaSgaInt = Convert.ToInt32(reader["FRespuestaSgaInt"]);
                         contradiccion.ExisteContradiccion = Convert.ToBoolean(reader["ExisteContradiccion"]);
                         contradiccion.OfRespuestaSgaFilePath = reader["ArchivoRespuestaSga"].ToString();
-
+                        contradiccion.OficioSgaGenerado = Convert.ToBoolean(reader["OficioGeneradoSga"]);
 
                         contradiccion.OficioPlenos = reader["OficioPleno"].ToString();
                         contradiccion.FEnvioOfPlenos = DateTimeUtilities.GetDateFromReader(reader, "FEnvioOfPleno");
                         contradiccion.FEnvioOfPlenosInt = Convert.ToInt32(reader["FEnvioOfPlenoInt"]);
                         contradiccion.OficioPlenoGenerado = Convert.ToBoolean(reader["OficioGeneradoPleno"]);
                         contradiccion.OPlenoFilePath = reader["RutaOficioPleno"].ToString();
+                        contradiccion.PlenoStr = (from n in OrganismoSingleton.Plenos
+                                                  where n.IdOrganismo == contradiccion.IdPleno
+                                                  select n.OrganismoDesc).ToList()[0];
+
+
 
                         contradiccion.Tema = reader["Tema"].ToString();
                         
@@ -264,6 +273,7 @@ namespace OficiosPlenos.Model
                 }
                 dr["ExisteContradiccion"] = Convert.ToInt16(contradiccion.ExisteContradiccion);
                 dr["ArchivoRespuestaSga"] = contradiccion.OfRespuestaSgaFilePath;
+                dr["OficioGeneradoSga"] = Convert.ToInt16(contradiccion.OficioSgaGenerado);
                 dr["IdContradiccion"] = contradiccion.IdContradiccion;
 
                 dr.EndEdit();
@@ -271,7 +281,7 @@ namespace OficiosPlenos.Model
                 dataAdapter.UpdateCommand = connection.CreateCommand();
 
                 dataAdapter.UpdateCommand.CommandText = "UPDATE Contradicciones SET OficioSga = @OficioSga,FEnvioOfSga = @FEnvioOfSga, FEnvioOfSgaInt = @FEnvioOfSgaInt, OfEnviadoSgaFilePath = @OfEnviadoSgaFilePath," +
-                                                        "OficioRespuestaSga = @OficioRespuestaSga,FRespuestaSga = @FRespuestaSga,FRespuestaSgaInt = @FRespuestaSgaInt,ExisteContradiccion = @ExisteContradiccion, ArchivoRespuestaSga = @ArchivoRespuestaSga " +
+                                                        "OficioRespuestaSga = @OficioRespuestaSga,FRespuestaSga = @FRespuestaSga,FRespuestaSgaInt = @FRespuestaSgaInt,ExisteContradiccion = @ExisteContradiccion, ArchivoRespuestaSga = @ArchivoRespuestaSga,OficioGeneradoSga = @OficioGeneradoSga " +
                                                         " WHERE IdContradiccion = @IdContradiccion";
 
                 dataAdapter.UpdateCommand.Parameters.Add("@OficioSga", OleDbType.VarChar, 0, "OficioSga");
@@ -283,6 +293,7 @@ namespace OficiosPlenos.Model
                 dataAdapter.UpdateCommand.Parameters.Add("@FRespuestaSgaInt", OleDbType.Numeric, 0, "FRespuestaSgaInt");
                 dataAdapter.UpdateCommand.Parameters.Add("@ExisteContradiccion", OleDbType.Numeric, 0, "ExisteContradiccion");
                 dataAdapter.UpdateCommand.Parameters.Add("@ArchivoRespuestaSga", OleDbType.VarChar, 0, "ArchivoRespuestaSga");
+                dataAdapter.UpdateCommand.Parameters.Add("@OficioGeneradoSga", OleDbType.Numeric, 0, "OficioGeneradoSga");
                 dataAdapter.UpdateCommand.Parameters.Add("@IdContradiccion", OleDbType.Numeric, 0, "IdContradiccion");
 
                 dataAdapter.Update(dataSet, "Contradicciones");

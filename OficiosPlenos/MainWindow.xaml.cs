@@ -106,6 +106,7 @@ namespace OficiosPlenos
             {
                 var resultado = (from n in listaContradicciones
                                  where StringUtilities.PrepareToAlphabeticalOrder(n.EncargadoStr).Contains(StringUtilities.PrepareToAlphabeticalOrder(tempString))
+                                  || StringUtilities.PrepareToAlphabeticalOrder(n.PlenoStr).Contains(StringUtilities.PrepareToAlphabeticalOrder(tempString))
                                  select n).ToList();
                 GContra.DataContext = resultado;
             }

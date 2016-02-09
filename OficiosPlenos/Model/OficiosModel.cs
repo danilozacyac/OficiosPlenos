@@ -63,5 +63,53 @@ namespace OficiosPlenos.Model
             return oficio;
         }
 
+
+        public Oficios GetOficioNoContradiccion()
+        {
+            Oficios oficio = new Oficios();
+
+            OleDbConnection oleConne = new OleDbConnection(connectionString);
+            OleDbCommand cmd = null;
+            OleDbDataReader reader = null;
+
+            String sqlCadena = "SELECT * FROM Oficios WHERE TipoOficio = 2";
+
+            try
+            {
+                oleConne.Open();
+
+                cmd = new OleDbCommand(sqlCadena, oleConne);
+                reader = cmd.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        oficio.Parrafo1 = reader["Parrafo1"].ToString();
+                        oficio.Parrafo2 = reader["Parrafo2"].ToString();
+                        oficio.Firma = reader["Firma"].ToString();
+                    }
+                }
+            }
+            catch (OleDbException ex)
+            {
+                string methodName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+                ErrorUtilities.SetNewErrorMessage(ex, methodName + " Exception,OficiosModel", "OficiosPleno");
+            }
+            catch (Exception ex)
+            {
+                string methodName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+                ErrorUtilities.SetNewErrorMessage(ex, methodName + " Exception,OficiosModel", "OficiosPleno");
+            }
+            finally
+            {
+                cmd.Dispose();
+                reader.Close();
+                oleConne.Close();
+            }
+
+            return oficio;
+        }
+
     }
 }

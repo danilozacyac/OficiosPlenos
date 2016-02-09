@@ -8,8 +8,10 @@ namespace OficiosPlenos.Dto
     {
         private int idContradiccion;
         private int idPleno;
+        private string plenoStr;
         private int idEncargado;
         private string encargadoStr;
+        private string titulo;
         private int numAsunto = 0;
         private int anioAsunto = DateTime.Now.Year;
         private string oficioAdmision = String.Empty;
@@ -38,6 +40,30 @@ namespace OficiosPlenos.Dto
         private string tema;
 
         
+
+        public string Titulo
+        {
+            get
+            {
+                return this.titulo;
+            }
+            set
+            {
+                this.titulo = value;
+            }
+        }
+
+        public string PlenoStr
+        {
+            get
+            {
+                return this.plenoStr;
+            }
+            set
+            {
+                this.plenoStr = value;
+            }
+        }
 
         public string Tema
         {

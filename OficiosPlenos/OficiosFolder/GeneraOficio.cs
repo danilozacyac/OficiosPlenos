@@ -33,13 +33,15 @@ namespace OficiosPlenos.OficiosFolder
         }
 
 
-        public void GetOficioSga()
+        public bool GetOficioSga()
         {
-            string rutaBase = @"C:\Users\" + Environment.UserName + @"\Documents\Seguimiento\";
+            bool isComplete = false;
+
+            string rutaBase = @"C:\Seguimiento\";
 
             string machote = rutaBase + "Machote.docx";
             string nuevoDoc = rutaBase + newFileName;
-
+           
             try
             {
                 //  Just to kill WINWORD.EXE if it is running
@@ -128,9 +130,7 @@ namespace OficiosPlenos.OficiosFolder
                     oPara1.Range.InsertParagraphAfter();
 
                     FindAndReplace(wordApp, "<Tema>", contradiccion.Tema);
-                    FindAndReplace(wordApp, "<Pleno>", (from n in OrganismoSingleton.Plenos
-                                                        where n.IdOrganismo == contradiccion.IdPleno
-                                                        select n.OrganismoDesc).ToList()[0]);
+                    FindAndReplace(wordApp, "<Pleno>", contradiccion.PlenoStr);
                     FindAndReplace(wordApp, "<NumAsunto>", contradiccion.NumAsunto + "/" + contradiccion.AnioAsunto);
 
                     if (contradiccion.FechaOficioAdmin == contradiccion.FEnvioOfSga)
@@ -142,7 +142,7 @@ namespace OficiosPlenos.OficiosFolder
                     
                     aDoc.Close();
 
-                    wordApp.Documents.Close();
+                   // wordApp.Documents.Close();
                     wordApp = null;
                 }
                 //    else
@@ -150,12 +150,277 @@ namespace OficiosPlenos.OficiosFolder
                 //"No File", MessageBoxButtons.OK, 
                 //MessageBoxIcon.Information);
                 //    killprocess("winword");
+
+                isComplete = true;
+                contradiccion.OfEnviadoSgaFilePath = nuevoDoc;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //        MessageBox.Show("Error in process.", "Internal Error", 
-                //MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string methodName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+                ErrorUtilities.SetNewErrorMessage(ex, methodName + " Exception,GeneraOficio", "OficiosPleno");
             }
+            return isComplete;
+        }
+
+
+        public bool GetOficioNoContradiccion()
+        {
+            bool isComplete = false;
+
+            string rutaBase = @"C:\Seguimiento\";
+
+            string machote = rutaBase + "Machote.docx";
+            string nuevoDoc = rutaBase + newFileName;
+
+            try
+            {
+                //  Just to kill WINWORD.EXE if it is running
+                //  copy letter format to temp.doc
+                File.Copy(machote, nuevoDoc, true);
+                //  create missing object
+                object missing = Missing.Value;
+                //  create Word application object
+                Word.Application wordApp = new Microsoft.Office.Interop.Word.Application();
+                //  create Word document object
+                Word.Document aDoc = null;
+                //  create & define filename object with temp.doc
+                object filename = nuevoDoc;
+                //  if temp.doc available
+                if (File.Exists((string)filename))
+                {
+                    object readOnly = false;
+                    object isVisible = false;
+                    //  make visible Word application
+                    wordApp.Visible = false;
+                    //  open Word document named temp.doc
+                    aDoc = wordApp.Documents.Open(ref filename, ref missing,
+                        ref readOnly, ref missing, ref missing, ref missing,
+                        ref missing, ref missing, ref missing, ref missing,
+                        ref missing, ref isVisible, ref missing, ref missing,
+                        ref missing, ref missing);
+                    aDoc.Activate();
+
+
+                    Microsoft.Office.Interop.Word.Paragraph oPara1;
+                    oPara1 = aDoc.Content.Paragraphs.Add(ref oMissing);
+                    //oPara1.Range.ParagraphFormat.Space1;
+                    oPara1.Range.Text = "OFICIO " + contradiccion.OficioPlenos;
+                    oPara1.Range.ParagraphFormat.Alignment = Microsoft.Office.Interop.Word.WdParagraphAlignment.wdAlignParagraphRight;
+                    oPara1.Range.Font.Size = 12;
+                    oPara1.Range.Font.Name = "Arial";
+                    oPara1.Format.SpaceAfter = 0;    //24 pt spacing after paragraph.
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.Text = "Ciudad de México, " + DateTimeUtilities.ToLongDateFormat(contradiccion.FEnvioOfPlenos);
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
+                    oPara1.Range.Text = oficio.Parrafo1;
+
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphJustify;
+                    oPara1.Range.Text = oficio.Parrafo2;
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    //oPara1.Range.ParagraphFormat.FirstLineIndent = 40;
+                    
+                    oPara1.Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
+                    oPara1.Range.ParagraphFormat.FirstLineIndent = 0;
+                    oPara1.Range.Text = oficio.Firma;
+                    
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphJustify;
+                    oPara1.Range.Font.Size = 10;
+                    oPara1.Range.Text = "C.c.p. Lic. Rafael Coello Cetina.- Secretario General de Acuerdos de la " +
+                        "Suprema Corte de Justicia de la Nación.- Para su conocimiento.";
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+
+
+                    FindAndReplace(wordApp, "<Encargado>",contradiccion.Titulo + " " + contradiccion.EncargadoStr);
+                    FindAndReplace(wordApp, "Distinguido Lic.", "Distinguido Licenciado");
+                    FindAndReplace(wordApp, "<Pleno>", contradiccion.PlenoStr);
+
+                    if (contradiccion.FechaOficioAdmin != null && contradiccion.FechaCorreo != null)
+                    {
+                        if (contradiccion.FechaOficioAdmin < contradiccion.FechaCorreo)
+                        {
+                            FindAndReplace(wordApp, "<oficiocorreo>", "oficio");
+                            FindAndReplace(wordApp, "<FechaPrimera>", DateTimeUtilities.ToLongDateFormat(contradiccion.FechaOficioAdmin));
+                        }
+                        else
+                        {
+                            FindAndReplace(wordApp, "<oficiocorreo>", "correo electrónico");
+                            FindAndReplace(wordApp, "<FechaPrimera>", DateTimeUtilities.ToLongDateFormat(contradiccion.FechaCorreo));
+                        }
+                    }
+                    else if (contradiccion.FechaOficioAdmin != null)
+                    {
+                        FindAndReplace(wordApp, "<oficiocorreo>", "oficio");
+                        FindAndReplace(wordApp, "<FechaPrimera>", DateTimeUtilities.ToLongDateFormat(contradiccion.FechaOficioAdmin));
+                    }
+                    else if (contradiccion.FechaCorreo != null)
+                    {
+                        FindAndReplace(wordApp, "<oficiocorreo>", "correo electrónico");
+                        FindAndReplace(wordApp, "<FechaPrimera>", DateTimeUtilities.ToLongDateFormat(contradiccion.FechaCorreo));
+                    }
+
+                    FindAndReplace(wordApp, "<NumAsunto>", contradiccion.NumAsunto + "/" + contradiccion.AnioAsunto);
+                    FindAndReplace(wordApp, "<RespuestaSga>", contradiccion.OficioRespuestaSga);
+                    FindAndReplace(wordApp, "<FRespuestaSga>", DateTimeUtilities.ToLongDateFormat( contradiccion.FRespuestaSga));
+                    FindAndReplace(wordApp, "<Tema>", contradiccion.Tema);
+
+                    aDoc.Save();
+                    aDoc.Close();
+
+                    wordApp = null;
+                }
+
+                isComplete = true;
+                contradiccion.OfEnviadoSgaFilePath = nuevoDoc;
+            }
+            catch (Exception ex)
+            {
+                string methodName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+                ErrorUtilities.SetNewErrorMessage(ex, methodName + " Exception,GeneraOficio", "OficiosPleno");
+            }
+            return isComplete;
+        }
+
+
+        public bool GetOficioContradiccion()
+        {
+            bool isComplete = false;
+
+            string rutaBase = @"C:\Seguimiento\";
+
+            string machote = rutaBase + "Machote.docx";
+            string nuevoDoc = rutaBase + newFileName;
+
+            try
+            {
+                //  Just to kill WINWORD.EXE if it is running
+                //  copy letter format to temp.doc
+                File.Copy(machote, nuevoDoc, true);
+                //  create missing object
+                object missing = Missing.Value;
+                //  create Word application object
+                Word.Application wordApp = new Microsoft.Office.Interop.Word.Application();
+                //  create Word document object
+                Word.Document aDoc = null;
+                //  create & define filename object with temp.doc
+                object filename = nuevoDoc;
+                //  if temp.doc available
+                if (File.Exists((string)filename))
+                {
+                    object readOnly = false;
+                    object isVisible = false;
+                    //  make visible Word application
+                    wordApp.Visible = false;
+                    //  open Word document named temp.doc
+                    aDoc = wordApp.Documents.Open(ref filename, ref missing,
+                        ref readOnly, ref missing, ref missing, ref missing,
+                        ref missing, ref missing, ref missing, ref missing,
+                        ref missing, ref isVisible, ref missing, ref missing,
+                        ref missing, ref missing);
+                    aDoc.Activate();
+
+
+                    Microsoft.Office.Interop.Word.Paragraph oPara1;
+                    oPara1 = aDoc.Content.Paragraphs.Add(ref oMissing);
+                    //oPara1.Range.ParagraphFormat.Space1;
+                    oPara1.Range.Text = "OFICIO " + contradiccion.OficioPlenos;
+                    oPara1.Range.ParagraphFormat.Alignment = Microsoft.Office.Interop.Word.WdParagraphAlignment.wdAlignParagraphRight;
+                    oPara1.Range.Font.Size = 12;
+                    oPara1.Range.Font.Name = "Arial";
+                    oPara1.Format.SpaceAfter = 0;    //24 pt spacing after paragraph.
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.Text = "Ciudad de México, " + DateTimeUtilities.ToLongDateFormat(contradiccion.FEnvioOfPlenos);
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
+                    oPara1.Range.Text = oficio.Parrafo1;
+
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphJustify;
+                    oPara1.Range.Text = oficio.Parrafo2;
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.Text = oficio.Parrafo3;
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    //oPara1.Range.ParagraphFormat.FirstLineIndent = 40;
+
+                    oPara1.Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
+                    oPara1.Range.ParagraphFormat.FirstLineIndent = 0;
+                    oPara1.Range.Text = oficio.Firma;
+
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphJustify;
+                    oPara1.Range.Font.Size = 10;
+                    oPara1.Range.Text = "C.c.p. Lic. Rafael Coello Cetina.- Secretario General de Acuerdos de la " +
+                        "Suprema Corte de Justicia de la Nación.- Para su conocimiento.";
+                    oPara1.Range.InsertParagraphAfter();
+                    oPara1.Range.InsertParagraphAfter();
+
+
+                    FindAndReplace(wordApp, "<Encargado>", contradiccion.Titulo + " " + contradiccion.EncargadoStr);
+                    FindAndReplace(wordApp, "Distinguido Lic.", "Distinguido Licenciado");
+                    FindAndReplace(wordApp, "<Pleno>", contradiccion.PlenoStr);
+
+                    if (contradiccion.FechaOficioAdmin != null && contradiccion.FechaCorreo != null)
+                    {
+                        if (contradiccion.FechaOficioAdmin < contradiccion.FechaCorreo)
+                        {
+                            FindAndReplace(wordApp, "<oficiocorreo>", "oficio");
+                            FindAndReplace(wordApp, "<FechaPrimera>", DateTimeUtilities.ToLongDateFormat(contradiccion.FechaOficioAdmin));
+                        }
+                        else
+                        {
+                            FindAndReplace(wordApp, "<oficiocorreo>", "correo electrónico");
+                            FindAndReplace(wordApp, "<FechaPrimera>", DateTimeUtilities.ToLongDateFormat(contradiccion.FechaCorreo));
+                        }
+                    }
+                    else if (contradiccion.FechaOficioAdmin != null)
+                    {
+                        FindAndReplace(wordApp, "<oficiocorreo>", "oficio");
+                        FindAndReplace(wordApp, "<FechaPrimera>", DateTimeUtilities.ToLongDateFormat(contradiccion.FechaOficioAdmin));
+                    }
+                    else if (contradiccion.FechaCorreo != null)
+                    {
+                        FindAndReplace(wordApp, "<oficiocorreo>", "correo electrónico");
+                        FindAndReplace(wordApp, "<FechaPrimera>", DateTimeUtilities.ToLongDateFormat(contradiccion.FechaCorreo));
+                    }
+
+                    FindAndReplace(wordApp, "<NumAsunto>", contradiccion.NumAsunto + "/" + contradiccion.AnioAsunto);
+                    FindAndReplace(wordApp, "<RespuestaSga>", contradiccion.OficioRespuestaSga);
+                    FindAndReplace(wordApp, "<FRespuestaSga>", DateTimeUtilities.ToLongDateFormat(contradiccion.FRespuestaSga));
+                    FindAndReplace(wordApp, "<Tema>", contradiccion.Tema);
+
+                    aDoc.Save();
+                    aDoc.Close();
+
+                    wordApp = null;
+                }
+
+                isComplete = true;
+                contradiccion.OfEnviadoSgaFilePath = nuevoDoc;
+            }
+            catch (Exception ex)
+            {
+                string methodName = System.Reflection.MethodBase.GetCurrentMethod().Name;
+                ErrorUtilities.SetNewErrorMessage(ex, methodName + " Exception,GeneraOficio", "OficiosPleno");
+            }
+            return isComplete;
         }
 
         private void FindAndReplace(Word.Application wordApp,
